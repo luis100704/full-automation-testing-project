@@ -61,3 +61,25 @@ test('Consultar publicaciones usuario 2', async ({ request }) => {
     }
 
 });
+
+
+test('Validar respuesta HTTP de un usuario', async ({ request }) => {
+    const response = await request.get(`${BASE_URL}/users/1`);
+
+    // Comprobar código HTTP
+    expect(response.status()).toBe(200);
+
+    // Comprobar que la respuesta es satisfactoria
+    expect(response.ok()).toBe(true);
+
+    // Comprobar cabeceras
+    const headers = response.headers();
+    expect(headers['content-type']).toContain('application/json');
+
+    // Analizar el cuerpo JSON
+    const user = await response.json();
+
+    expect(user.id).toBe(1);
+    expect(user.name).toBeTruthy();
+    expect(user.email).toBeTruthy();
+});
