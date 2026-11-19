@@ -83,3 +83,33 @@ test('Validar respuesta HTTP de un usuario', async ({ request }) => {
     expect(user.name).toBeTruthy();
     expect(user.email).toBeTruthy();
 });
+
+
+test('Crear un nuevo usuario', async ({ request }) => {
+    const newUser = {
+        name: 'Luis',
+        username: 'betroy',
+        email: 'luis@test.com'
+    };
+
+    const response = await request.post(`${BASE_URL}/users`, {
+        data: newUser
+    });
+
+    // Comprobar código HTTP
+    expect(response.status()).toBe(201);
+
+    // Comprobar respuesta satisfactoria
+    expect(response.ok()).toBe(true);
+
+    // Obtener respuesta JSON
+    const createdUser = await response.json();
+
+    // Validar datos devueltos
+    expect(createdUser.name).toBe(newUser.name);
+    expect(createdUser.username).toBe(newUser.username);
+    expect(createdUser.email).toBe(newUser.email);
+
+    // Comprobar que devuelve un ID
+    expect(createdUser.id).toBeTruthy();
+});
