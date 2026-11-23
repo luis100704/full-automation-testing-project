@@ -113,3 +113,54 @@ test('Crear un nuevo usuario', async ({ request }) => {
     // Comprobar que devuelve un ID
     expect(createdUser.id).toBeTruthy();
 });
+
+
+test('Actualizar usuario mediante PUT', async ({ request }) => {
+    const updatedUser = {
+        id: 1,
+        name: 'Luis Actualizado',
+        username: 'betroy',
+        email: 'actualizado@test.com'
+    };
+
+    const response = await request.put(`${BASE_URL}/users/1`, {
+        data: updatedUser
+    });
+
+    expect(response.status()).toBe(200);
+    expect(response.ok()).toBe(true);
+
+    const user = await response.json();
+
+    expect(user.id).toBe(1);
+    expect(user.name).toBe(updatedUser.name);
+    expect(user.username).toBe(updatedUser.username);
+    expect(user.email).toBe(updatedUser.email);
+});
+
+
+test('Actualizar email mediante PATCH', async ({ request }) => {
+    const updatedData = {
+        email: 'nuevoemail@test.com'
+    };
+
+    const response = await request.patch(`${BASE_URL}/users/1`, {
+        data: updatedData
+    });
+
+    expect(response.status()).toBe(200);
+    expect(response.ok()).toBe(true);
+
+    const user = await response.json();
+
+    expect(user.email).toBe(updatedData.email);
+    expect(user.id).toBe(1);
+});
+
+
+test('Eliminar usuario mediante DELETE', async ({ request }) => {
+    const response = await request.delete(`${BASE_URL}/users/1`);
+
+    expect(response.status()).toBe(200);
+    expect(response.ok()).toBe(true);
+});
