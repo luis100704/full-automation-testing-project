@@ -164,3 +164,50 @@ test('Eliminar usuario mediante DELETE', async ({ request }) => {
     expect(response.status()).toBe(200);
     expect(response.ok()).toBe(true);
 });
+
+
+test('Consultar usuario mediante Path Params', async ({ request }) => {
+    const userId = 5;
+
+    const response = await request.get(`${BASE_URL}/users/${userId}`);
+
+    expect(response.status()).toBe(200);
+
+    const user = await response.json();
+
+    expect(user.id).toBe(userId);
+});
+
+
+test('Filtrar publicaciones mediante Query Params', async ({ request }) => {
+    const response = await request.get(`${BASE_URL}/posts`, {
+        params: {
+            userId: 2,
+            id: 11
+        }
+    });
+
+    expect(response.status()).toBe(200);
+
+    const posts = await response.json();
+
+    expect(posts.length).toBe(1);
+    expect(posts[0].userId).toBe(2);
+    expect(posts[0].id).toBe(11);
+});
+
+
+test('Consultar usuario enviando Headers', async ({ request }) => {
+    const response = await request.get(`${BASE_URL}/users/1`, {
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+
+    expect(response.status()).toBe(200);
+
+    const user = await response.json();
+
+    expect(user.id).toBe(1);
+    expect(response.headers()['content-type']).toContain('application/json');
+});
