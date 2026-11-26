@@ -211,3 +211,30 @@ test('Consultar usuario enviando Headers', async ({ request }) => {
     expect(user.id).toBe(1);
     expect(response.headers()['content-type']).toContain('application/json');
 });
+
+
+test('Validar estructura completa de respuesta de usuario', async ({ request }) => {
+    const response = await request.get(`${BASE_URL}/users/1`);
+
+    // Validar estado HTTP
+    expect(response.status()).toBe(200);
+    expect(response.ok()).toBe(true);
+
+    // Validar cabeceras
+    const headers = response.headers();
+    expect(headers['content-type']).toContain('application/json');
+
+    // Obtener el cuerpo JSON
+    const user = await response.json();
+
+    // Validar estructura
+    expect(user).toHaveProperty('id');
+    expect(user).toHaveProperty('name');
+    expect(user).toHaveProperty('username');
+    expect(user).toHaveProperty('email');
+
+    // Validar valores
+    expect(user.id).toBe(1);
+    expect(user.name).toBeTruthy();
+    expect(user.email).toContain('@');
+});
